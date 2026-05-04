@@ -766,8 +766,7 @@ async function sendChat(){
   showTyping();
  
   try {
-    const WORKER_URL = 'WORKER_URL_AQUI'; // <- pega aquí tu URL de Cloudflare Worker
-    const res = await fetch(WORKER_URL,{
+    const res = await fetch('/.netlify/functions/claude-proxy',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body: JSON.stringify({
@@ -863,4 +862,3 @@ renderObras();
 </script>
 </body>
 </html>
- 
