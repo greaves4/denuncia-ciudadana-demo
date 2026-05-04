@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Denuncia Ciudadana – Demo con IA</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --azul:#0D2547;
+  --azul-med:#1B3A6B;
+  --azul-claro:#EBF1FA;
+  --verde:#15803D;
+  --rojo:#DC2626;
+  --ambar:#D97706;
+  --gris-bg:#F0F2F5;
+  --gris-borde:#E2E8F0;
+  --gris-txt:#718096;
+  --blanco:#ffffff;
+  --radio:12px;
+  --font:'DM Sans',sans-serif;
+  --mono:'DM Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;background:#0D2547;font-family:var(--font);}
+body{display:flex;justify-content:center;align-items:flex-start;padding:24px 0 48px;}
+
+/* ── PHONE SHELL ── */
+.phone{
+  width:390px;max-width:100%;
+  background:var(--gris-bg);
+  border-radius:44px;
+  border:9px solid #1a1a30;
+  box-shadow:0 32px 80px rgba(0,0,0,0.6),inset 0 0 0 1px rgba(255,255,255,0.06);
+  overflow:hidden;
+  position:relative;
+}
+@media(max-width:420px){
+  body{padding:0;background:var(--gris-bg);}
+  .phone{border-radius:0;border:none;box-shadow:none;width:100%;}
+}
+
+/* ── STATUS BAR ── */
+.status{
+  background:var(--azul);
+  height:46px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 22px;
+}
+.status-time{color:#fff;font-size:13px;font-weight:600;font-family:var(--mono);}
+.status-icons{display:flex;align-items:center;gap:5px;}
+.status-icons span{color:rgba(255,255,255,0.8);font-size:11px;}
+
+/* ── TOPBAR ── */
+.topbar{
+  background:var(--azul);
+  padding:8px 16px 16px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.brand{display:flex;align-items:center;gap:10px;}
+.brand-icon{
+  width:34px;height:34px;background:#1e4a8a;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.brand-name{font-size:13px;font-weight:700;color:#fff;letter-spacing:-0.01em;}
+.brand-sub{font-size:9px;color:#90A4C0;margin-top:1px;letter-spacing:0.01em;}
+.ia-btn{
+  display:flex;align-items:center;gap:6px;
+  background:#fff;color:var(--azul);
+  font-size:11px;font-weight:700;
+  padding:7px 12px;border-radius:20px;border:none;cursor:pointer;
+  letter-spacing:0.01em;
+  transition:transform 0.1s,box-shadow 0.1s;
+  box-shadow:0 2px 8px rgba(0,0,0,0.2);
+}
+.ia-btn:active{transform:scale(0.96);}
+.ia-btn.open{background:var(--azul-claro);color:var(--azul-med);}
+.pulse{width:7px;height:7px;border-radius:50%;background:#22C55E;flex-shrink:0;
+  animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,0.4);}50%{box-shadow:0 0 0 4px rgba(34,197,94,0);}}
+
+/* ── TABS ── */
+.tabs{
+  background:var(--azul);
+  display:flex;padding:0 16px;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  overflow-x:auto;
+}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{
+  padding:10px 14px;font-size:12px;font-weight:500;
+  color:rgba(255,255,255,0.45);
+  border-bottom:2px solid transparent;
+  cursor:pointer;white-space:nowrap;flex-shrink:0;
+  transition:color 0.15s;
+}
+.tab.active{color:#fff;border-bottom-color:#fff;font-weight:700;}
+
+/* ── SCREEN ── */
+.screen{background:var(--gris-bg);min-height:580px;}
+.hidden{display:none!important;}
+
+/* ── CHAT PANEL ── */
+.chat-panel{background:#fff;margin:10px 12px 0;border-radius:var(--radio);overflow:hidden;
+  box-shadow:0 2px 12px rgba(0,0,0,0.08);}
+.chat-hdr{
+  background:var(--azul);
+  padding:10px 14px;display:flex;align-items:center;gap:8px;
+}
+.chat-hdr-name{font-size:12px;font-weight:700;color:#fff;}
+.chat-hdr-status{font-size:10px;color:#90A4C0;}
+.chat-msgs{
+  padding:12px;display:flex;flex-direction:column;gap:8px;
+  max-height:220px;overflow-y:auto;min-height:80px;
+  scroll-behavior:smooth;
+}
+.chat-msgs::-webkit-scrollbar{width:3px;}
+.chat-msgs::-webkit-scrollbar-thumb{background:var(--gris-borde);border-radius:2px;}
+.msg-row{display:flex;gap:7px;align-items:flex-end;}
+.bot-av{
+  width:24px;height:24px;border-radius:50%;background:var(--azul-med);
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;
+}
+.bot-bubble{
+  background:var(--gris-bg);border-radius:12px 12px 12px 2px;
+  padding:9px 12px;font-size:12px;color:#1A202C;line-height:1.5;
+  max-width:230px;animation:fadeUp 0.2s ease;
+}
+.msg-row.user{flex-direction:row-reverse;}
+.user-bubble{
+  background:var(--azul-med);border-radius:12px 12px 2px 12px;
+  padding:9px 12px;font-size:12px;color:#fff;line-height:1.5;
+  max-width:230px;animation:fadeUp 0.2s ease;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+.typing-dots{display:flex;gap:4px;padding:2px 0;}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--gris-txt);animation:blink 1.2s infinite;}
+.dot:nth-child(2){animation-delay:0.2s;}
+.dot:nth-child(3){animation-delay:0.4s;}
+@keyframes blink{0%,80%,100%{opacity:0.25;}40%{opacity:1;}}
+.chat-input-row{
+  display:flex;gap:6px;padding:8px 10px;
+  border-top:1px solid var(--gris-borde);align-items:center;
+}
+.chat-inp{
+  flex:1;border:1px solid var(--gris-borde);border-radius:20px;
+  padding:9px 14px;font-size:12px;outline:none;font-family:var(--font);
+  background:var(--gris-bg);color:#1A202C;
+  transition:border-color 0.15s;
+}
+.chat-inp:focus{border-color:var(--azul-med);}
+.chat-send-btn{
+  background:var(--azul-med);border:none;border-radius:50%;
+  width:34px;height:34px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;flex-shrink:0;transition:transform 0.1s;
+}
+.chat-send-btn:active{transform:scale(0.92);}
+
+/* ── FILTERS ── */
+.section-lbl{
+  font-size:10px;font-weight:700;color:var(--gris-txt);
+  text-transform:uppercase;letter-spacing:0.07em;
+  padding:12px 16px 5px;
+}
+.filter-card{background:#fff;margin:0 12px 8px;border-radius:var(--radio);padding:12px;
+  box-shadow:0 1px 4px rgba(0,0,0,0.05);}
+.filter-row{display:flex;gap:8px;}
+.fsel{
+  flex:1;border:1px solid var(--gris-borde);border-radius:8px;
+  padding:9px 10px;font-size:12px;color:#1A202C;background:#fff;
+  font-family:var(--font);-webkit-appearance:none;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23718096' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 9px center;
+}
+.tipo-tags{display:flex;gap:6px;flex-wrap:wrap;padding:0 12px 8px;}
+.ttag{
+  font-size:11px;padding:5px 12px;border-radius:20px;
+  border:1px solid var(--gris-borde);color:var(--gris-txt);background:#fff;
+  cursor:pointer;font-family:var(--font);transition:all 0.15s;
+}
+.ttag.active{background:var(--azul-claro);color:var(--azul-med);border-color:var(--azul-med);font-weight:600;}
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:0 12px 10px;}
+.stat-c{background:#fff;border-radius:10px;padding:10px 8px;text-align:center;
+  box-shadow:0 1px 4px rgba(0,0,0,0.05);}
+.stat-num{font-size:20px;font-weight:700;letter-spacing:-0.03em;}
+.stat-lbl{font-size:9px;color:var(--gris-txt);margin-top:2px;line-height:1.3;font-weight:500;}
+
+/* ── OBRA CARDS ── */
+.result-hdr{padding:8px 16px;font-size:11px;color:var(--gris-txt);font-weight:500;}
+.obra-card{
+  background:#fff;margin:0 12px 8px;border-radius:var(--radio);padding:13px;
+  border:2px solid transparent;cursor:pointer;
+  transition:border-color 0.15s,box-shadow 0.15s;
+  box-shadow:0 1px 4px rgba(0,0,0,0.05);
+}
+.obra-card:active{transform:scale(0.99);}
+.obra-card.sel{border-color:var(--azul-med);background:#F0F5FB;}
+.obra-title{font-size:13px;font-weight:700;color:#1A202C;margin-bottom:4px;line-height:1.35;}
+.obra-tipo-tag{
+  font-size:10px;background:var(--azul-claro);color:var(--azul-med);
+  padding:2px 8px;border-radius:4px;display:inline-block;margin-bottom:6px;font-weight:600;
+}
+.obra-meta{font-size:11px;color:var(--gris-txt);margin-bottom:5px;line-height:1.5;}
+.obra-status-row{display:flex;align-items:center;gap:5px;}
+.s-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.s-txt{font-size:10px;color:var(--gris-txt);}
+
+/* ── FORM ── */
+.form-card{background:#fff;margin:0 12px 6px;border-radius:var(--radio);padding:15px;
+  box-shadow:0 1px 4px rgba(0,0,0,0.05);}
+.form-title{font-size:15px;font-weight:700;color:#1A202C;margin-bottom:3px;}
+.form-obra-ref{font-size:11px;color:var(--azul-med);margin-bottom:10px;font-weight:500;line-height:1.4;}
+.anon-badge{
+  background:#F0FDF4;border:1px solid #86EFAC;border-radius:8px;
+  padding:8px 10px;font-size:11px;color:var(--verde);
+  display:flex;align-items:center;gap:6px;margin-bottom:12px;font-weight:500;
+}
+.field-lbl{
+  font-size:10px;font-weight:700;color:var(--gris-txt);
+  text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;
+}
+.fld-sel{
+  width:100%;border:1px solid var(--gris-borde);border-radius:8px;
+  padding:10px;font-size:13px;color:#1A202C;background:#fff;
+  font-family:var(--font);margin-bottom:10px;-webkit-appearance:none;appearance:none;
+}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+.folio-box{background:var(--azul-claro);border:1px solid #93B4D9;border-radius:8px;padding:10px;}
+.folio-code{font-size:14px;font-weight:700;color:var(--azul-med);font-family:var(--mono);letter-spacing:0.04em;}
+.folio-hint{font-size:9px;color:#4A7BA8;margin-top:3px;}
+.upload-zone{
+  border:2px dashed var(--gris-borde);border-radius:8px;
+  padding:12px 8px;text-align:center;cursor:pointer;
+  transition:border-color 0.15s;
+}
+.upload-zone:hover{border-color:var(--azul-med);}
+.upload-icon{font-size:20px;color:#CBD5E0;line-height:1;}
+.upload-hint{font-size:9px;color:#A0AEC0;margin-top:3px;line-height:1.4;}
+.desc-area{
+  width:100%;border:1px solid var(--gris-borde);border-radius:8px;
+  padding:10px;font-size:12px;color:#1A202C;resize:none;height:80px;
+  margin-bottom:10px;font-family:var(--font);line-height:1.5;
+  transition:border-color 0.15s;outline:none;
+}
+.desc-area:focus{border-color:var(--azul-med);}
+.submit-btn{
+  width:100%;background:var(--azul);color:#fff;border:none;
+  border-radius:10px;padding:14px;font-size:14px;font-weight:700;
+  cursor:pointer;letter-spacing:0.01em;font-family:var(--font);
+  transition:background 0.15s,transform 0.1s;
+}
+.submit-btn:hover{background:var(--azul-med);}
+.submit-btn:active{transform:scale(0.98);}
+.back-btn{
+  background:none;border:none;color:var(--azul-med);
+  font-size:12px;cursor:pointer;padding:8px 16px;
+  display:block;font-family:var(--font);font-weight:600;
+}
+
+/* ── CONFIRM ── */
+.confirm-wrap{padding:28px 20px;text-align:center;}
+.confirm-icon{
+  width:64px;height:64px;background:#F0FDF4;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 14px;
+  animation:popIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes popIn{from{transform:scale(0.5);opacity:0;}to{transform:scale(1);opacity:1;}}
+.confirm-title{font-size:19px;font-weight:700;color:var(--verde);margin-bottom:6px;}
+.confirm-sub{font-size:12px;color:var(--gris-txt);margin-bottom:18px;line-height:1.6;}
+.confirm-folio-box{background:var(--azul-claro);border-radius:12px;padding:16px;margin-bottom:18px;}
+.cf-lbl{font-size:10px;color:#4A7BA8;margin-bottom:5px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.cf-code{font-size:22px;font-weight:700;color:var(--azul-med);font-family:var(--mono);letter-spacing:0.06em;}
+.cf-hint{font-size:11px;color:#4A7BA8;margin-top:5px;line-height:1.5;}
+.copy-btn{
+  width:100%;background:#fff;border:2px solid var(--azul-med);color:var(--azul-med);
+  border-radius:10px;padding:12px;font-size:13px;font-weight:700;
+  cursor:pointer;margin-bottom:8px;font-family:var(--font);transition:all 0.15s;
+}
+.copy-btn:active{background:var(--azul-claro);}
+.nueva-btn{
+  width:100%;background:var(--azul);color:#fff;border:none;
+  border-radius:10px;padding:12px;font-size:13px;font-weight:700;
+  cursor:pointer;font-family:var(--font);transition:background 0.15s;
+}
+.nueva-btn:hover{background:var(--azul-med);}
+
+/* ── MAPA ── */
+.mapa-wrap{padding:14px 12px;}
+.mapa-box{
+  background:linear-gradient(135deg,#E6F1FB 0%,#D1E8F7 100%);
+  border-radius:var(--radio);padding:28px 16px;text-align:center;margin-bottom:10px;
+}
+.mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.mini-card{background:#fff;border-radius:10px;padding:12px;text-align:center;
+  box-shadow:0 1px 4px rgba(0,0,0,0.05);}
+
+/* ── PÚBLICAS ── */
+.pub-wrap{padding:10px 12px;}
+.pub-card{background:#fff;border-radius:var(--radio);padding:13px;margin-bottom:8px;
+  border:1px solid var(--gris-borde);box-shadow:0 1px 4px rgba(0,0,0,0.04);}
+.estado-pill{
+  font-size:10px;padding:3px 9px;border-radius:20px;font-weight:600;
+  display:inline-block;
+}
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <!-- STATUS -->
+  <div class="status">
+    <span class="status-time" id="clock">9:41</span>
+    <div class="status-icons">
+      <span>●●●</span>
+      <span>WiFi</span>
+      <span>100%</span>
+    </div>
+  </div>
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </div>
+      <div>
+        <div class="brand-name">Denuncia Ciudadana</div>
+        <div class="brand-sub">Auditoría Superior de la Federación</div>
+      </div>
+    </div>
+    <button class="ia-btn" id="ia-btn">
+      <div class="pulse"></div>
+      Asistente IA
+    </button>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <div class="tab active" id="tab-buscar" onclick="showTab('buscar')">Buscar obra</div>
+    <div class="tab" id="tab-mapa" onclick="showTab('mapa')">Mapa</div>
+    <div class="tab" id="tab-publicas" onclick="showTab('publicas')">Denuncias públicas</div>
+  </div>
+
+  <!-- SCREEN BUSCAR -->
+  <div class="screen" id="screen-buscar">
+
+    <!-- CHAT IA -->
+    <div id="chat-panel" class="hidden">
+      <div class="chat-panel">
+        <div class="chat-hdr">
+          <div class="pulse" style="flex-shrink:0;"></div>
+          <div>
+            <div class="chat-hdr-name">Agente de búsqueda IA</div>
+            <div class="chat-hdr-status">Conectado · Claude API</div>
+          </div>
+        </div>
+        <div class="chat-msgs" id="chat-msgs"></div>
+        <div class="chat-input-row">
+          <input class="chat-inp" id="chat-inp" placeholder="Describe la obra que quieres denunciar…" />
+          <button class="chat-send-btn" id="send-btn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FILTERS -->
+    <div id="filters-panel">
+      <div class="section-lbl">Filtros de búsqueda</div>
+      <div class="filter-card">
+        <div class="filter-row">
+          <select class="fsel" id="sel-estado" onchange="filterObras()">
+            <option value="">Todos los estados</option>
+            <option value="qro">Querétaro</option>
+            <option value="cdmx">Ciudad de México</option>
+            <option value="jal">Jalisco</option>
+            <option value="nl">Nuevo León</option>
+            <option value="pue">Puebla</option>
+            <option value="mex">Estado de México</option>
+          </select>
+          <select class="fsel" id="sel-muni" onchange="filterObras()">
+            <option value="">Municipio</option>
+            <option value="qro">Querétaro</option>
+            <option value="sjr">San Juan del Río</option>
+            <option value="gdl">Guadalajara</option>
+            <option value="mty">Monterrey</option>
+            <option value="nau">Naucalpan</option>
+            <option value="pue">Puebla</option>
+          </select>
+        </div>
+      </div>
+      <div class="tipo-tags">
+        <div class="ttag active" onclick="selectTipo(this,'todos')">Todos</div>
+        <div class="ttag" onclick="selectTipo(this,'carretera')">Carretera</div>
+        <div class="ttag" onclick="selectTipo(this,'puente')">Puente</div>
+        <div class="ttag" onclick="selectTipo(this,'escuela')">Escuela</div>
+        <div class="ttag" onclick="selectTipo(this,'hospital')">Hospital</div>
+        <div class="ttag" onclick="selectTipo(this,'agua')">Agua</div>
+      </div>
+      <div class="stats-row">
+        <div class="stat-c">
+          <div class="stat-num" style="color:var(--azul-med);">3,248</div>
+          <div class="stat-lbl">Obras registradas</div>
+        </div>
+        <div class="stat-c">
+          <div class="stat-num" style="color:var(--rojo);">847</div>
+          <div class="stat-lbl">Denuncias activas</div>
+        </div>
+        <div class="stat-c">
+          <div class="stat-num" style="color:var(--verde);">249</div>
+          <div class="stat-lbl">Resueltas</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OBRAS -->
+    <div id="obras-panel">
+      <div class="result-hdr" id="result-hdr"></div>
+      <div id="obras-list"></div>
+    </div>
+
+    <!-- FORMULARIO -->
+    <div id="form-panel" class="hidden">
+      <div class="form-card">
+        <div class="form-title">Registrar denuncia</div>
+        <div class="form-obra-ref" id="form-obra-ref"></div>
+        <div class="anon-badge">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Tu denuncia es 100% anónima. No se almacenan datos personales.
+        </div>
+        <div class="field-lbl">Tipo de irregularidad</div>
+        <select class="fld-sel" id="tipo-irr">
+          <option>Obra abandonada o sin avance</option>
+          <option>Materiales de baja calidad</option>
+          <option>Monto inflado / sobreprecio</option>
+          <option>Obra inexistente</option>
+          <option>Daño ambiental</option>
+          <option>Incumplimiento de especificaciones</option>
+          <option>Otro</option>
+        </select>
+        <div class="two-col">
+          <div>
+            <div class="field-lbl">Tu folio</div>
+            <div class="folio-box">
+              <div class="folio-code" id="folio-num">DC-2026-X1Y2Z</div>
+              <div class="folio-hint">Guárdalo para consultar el estado de tu denuncia</div>
+            </div>
+          </div>
+          <div>
+            <div class="field-lbl">Evidencia</div>
+            <div class="upload-zone">
+              <div class="upload-icon">📎</div>
+              <div style="font-size:10px;color:var(--gris-txt);margin-top:3px;">JPG · PNG · MP4</div>
+              <div class="upload-hint">máx. 50 MB por archivo<br>hasta 5 archivos</div>
+            </div>
+          </div>
+        </div>
+        <div class="field-lbl">Descripción detallada</div>
+        <textarea class="desc-area" id="desc-txt" placeholder="Describe lo que observaste: fechas aproximadas, condiciones de la obra, irregularidades visibles…"></textarea>
+        <button class="submit-btn" onclick="enviar()">Enviar denuncia →</button>
+      </div>
+      <button class="back-btn" onclick="volverObras()">← Volver a resultados</button>
+    </div>
+
+    <!-- CONFIRMACIÓN -->
+    <div id="confirm-panel" class="hidden">
+      <div class="confirm-wrap">
+        <div class="confirm-icon">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#15803D" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="confirm-title">¡Denuncia enviada!</div>
+        <div class="confirm-sub">Tu reporte fue recibido y será revisado por el equipo de auditoría. Tu identidad está completamente protegida.</div>
+        <div class="confirm-folio-box">
+          <div class="cf-lbl">Folio de seguimiento</div>
+          <div class="cf-code" id="cf-code">DC-2026-X1Y2Z</div>
+          <div class="cf-hint">Usa este folio para consultar el estado de tu denuncia en cualquier momento desde la plataforma.</div>
+        </div>
+        <button class="copy-btn" id="copy-btn" onclick="copiar(this)">Copiar folio</button>
+        <button class="nueva-btn" onclick="nuevaDenuncia()">Hacer otra denuncia</button>
+      </div>
+    </div>
+
+  </div><!-- /screen-buscar -->
+
+  <!-- SCREEN MAPA -->
+  <div class="screen hidden" id="screen-mapa">
+    <div class="mapa-wrap">
+      <div class="mapa-box">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#1B3A6B" stroke-width="1.5" style="margin-bottom:10px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <div style="font-size:14px;font-weight:700;color:var(--azul-med);margin-bottom:6px;">Mapa interactivo de obras</div>
+        <div style="font-size:11px;color:#4A7BA8;line-height:1.6;">Visualización georreferenciada de obras públicas integrada con el API de la ASR. Disponible en la versión de producción.</div>
+      </div>
+      <div class="mini-grid">
+        <div class="mini-card">
+          <div style="font-size:22px;font-weight:700;color:var(--rojo);">12</div>
+          <div style="font-size:10px;color:var(--gris-txt);margin-top:2px;">Obras con alertas</div>
+        </div>
+        <div class="mini-card">
+          <div style="font-size:22px;font-weight:700;color:var(--azul-med);">847</div>
+          <div style="font-size:10px;color:var(--gris-txt);margin-top:2px;">Puntos registrados</div>
+        </div>
+        <div class="mini-card">
+          <div style="font-size:22px;font-weight:700;color:var(--ambar);">38</div>
+          <div style="font-size:10px;color:var(--gris-txt);margin-top:2px;">En investigación</div>
+        </div>
+        <div class="mini-card">
+          <div style="font-size:22px;font-weight:700;color:var(--verde);">249</div>
+          <div style="font-size:10px;color:var(--gris-txt);margin-top:2px;">Denuncias resueltas</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN PÚBLICAS -->
+  <div class="screen hidden" id="screen-publicas">
+    <div class="pub-wrap">
+      <div style="font-size:11px;color:var(--gris-txt);margin-bottom:10px;padding:0 4px;font-weight:500;">Denuncias verificadas disponibles al público</div>
+      <div id="pub-list"></div>
+    </div>
+  </div>
+
+</div><!-- /phone -->
+
+<script>
+// ── DATOS DE OBRAS ──────────────────────────────────────────────
+const OBRAS = [
+  {id:1,nombre:"Carretera Federal 57 Querétaro – San Luis Potosí, Tramo 3 (km 142–198)",tipo:"carretera",estado:"qro",muni:"qro",contrato:"SHCP-2023-0847",monto:"$142.6 MDP",avance:78,estatus:"alerta",txt:"78% avance reportado · 3 denuncias previas",contratista:"Construcciones Viales del Bajío S.A. de C.V."},
+  {id:2,nombre:"Puente vehicular sobre Av. 5 de Febrero y Río Querétaro",tipo:"puente",estado:"qro",muni:"qro",contrato:"INF-2024-0219",monto:"$38.4 MDP",avance:45,estatus:"activa",txt:"45% avance · Sin denuncias previas",contratista:"Ingeniería Estructural QRO S.A."},
+  {id:3,nombre:"Rehabilitación Escuela Primaria Lázaro Cárdenas (Turno Matutino)",tipo:"escuela",estado:"qro",muni:"sjr",contrato:"EDU-2023-1102",monto:"$8.7 MDP",avance:12,estatus:"cancelada",txt:"Obra detenida · 12% avance · 7 denuncias",contratista:"Obras Educativas del Centro S.A."},
+  {id:4,nombre:"Libramiento Norponiente Guadalajara – Periférico, Tramo 2",tipo:"carretera",estado:"jal",muni:"gdl",contrato:"SCT-2023-3341",monto:"$312.0 MDP",avance:55,estatus:"alerta",txt:"55% avance · 5 denuncias previas",contratista:"Grupo Constructor del Occidente S.A."},
+  {id:5,nombre:"Ampliación Hospital General Zona Norte Monterrey",tipo:"hospital",estado:"nl",muni:"mty",contrato:"IMSS-2024-0089",monto:"$87.3 MDP",avance:30,estatus:"alerta",txt:"30% avance · 2 denuncias previas",contratista:"Construcciones Médicas del Norte S.A."},
+  {id:6,nombre:"Red de agua potable Naucalpan – Sector Poniente, Fase II",tipo:"agua",estado:"mex",muni:"nau",contrato:"CONAGUA-2023-4421",monto:"$45.1 MDP",avance:0,estatus:"cancelada",txt:"Obra inexistente · 9 denuncias · En investigación",contratista:"Hidráulica Nacional S.A. de C.V."},
+  {id:7,nombre:"Boulevard Universitario Puebla – Colonia La Paz",tipo:"carretera",estado:"pue",muni:"pue",contrato:"MOP-2024-0567",monto:"$28.9 MDP",avance:92,estatus:"activa",txt:"92% avance · Sin denuncias",contratista:"Pavimentos y Vialidades de Puebla S.A."},
+  {id:8,nombre:"Puente peatonal Insurgentes Norte – Metro Indios Verdes",tipo:"puente",estado:"cdmx",muni:"nau",contrato:"SEMOVI-2023-1198",monto:"$19.2 MDP",avance:60,estatus:"alerta",txt:"60% avance · 1 denuncia previa",contratista:"Estructuras Metropolitanas S.A."},
+];
+
+const COLORES = {activa:"#22C55E",alerta:"#F59E0B",cancelada:"#EF4444"};
+let obraActual = null;
+let tipoActivo = 'todos';
+let chatHistory = [];
+let chatListo = false;
+
+// ── RENDER OBRAS ──────────────────────────────────────────────
+function getObrasFiltradas(){
+  const est = document.getElementById('sel-estado').value;
+  const mun = document.getElementById('sel-muni').value;
+  return OBRAS.filter(o =>
+    (!est || o.estado === est) &&
+    (!mun || o.muni === mun) &&
+    (tipoActivo === 'todos' || o.tipo === tipoActivo)
+  );
+}
+
+function renderObras(){
+  const lista = getObrasFiltradas();
+  const hdr = document.getElementById('result-hdr');
+  const cnt = lista.length;
+  const estEl = document.getElementById('sel-estado');
+  const loc = estEl.value ? estEl.options[estEl.selectedIndex].text : 'México';
+  hdr.textContent = `${cnt} obra${cnt!==1?'s':''} encontrada${cnt!==1?'s':''} · ${loc}`;
+  document.getElementById('obras-list').innerHTML = lista.map(o=>`
+    <div class="obra-card${obraActual===o.id?' sel':''}" onclick="selectObra(${o.id})">
+      <div class="obra-title">${o.nombre}</div>
+      <span class="obra-tipo-tag">${o.tipo.charAt(0).toUpperCase()+o.tipo.slice(1)}</span>
+      <div class="obra-meta">Contrato: ${o.contrato} &nbsp;·&nbsp; ${o.monto}<br>${o.contratista}</div>
+      <div class="obra-status-row">
+        <div class="s-dot" style="background:${COLORES[o.estatus]};"></div>
+        <span class="s-txt">${o.txt}</span>
+      </div>
+    </div>`).join('');
+}
+
+function filterObras(){ iaFiltroActivo=false; iaIdsFiltro=[]; renderObras(); }
+
+function selectTipo(el, tipo){
+  document.querySelectorAll('.ttag').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  tipoActivo = tipo;
+  iaFiltroActivo=false; iaIdsFiltro=[];
+  renderObras();
+}
+
+function selectObra(id){
+  obraActual = id;
+  const o = OBRAS.find(x=>x.id===id);
+  document.getElementById('form-obra-ref').textContent = o.nombre;
+  document.getElementById('filters-panel').classList.add('hidden');
+  document.getElementById('obras-panel').classList.add('hidden');
+  document.getElementById('chat-panel').classList.add('hidden');
+  document.getElementById('form-panel').classList.remove('hidden');
+  document.getElementById('confirm-panel').classList.add('hidden');
+  const folio = generarFolio();
+  document.getElementById('folio-num').textContent = folio;
+  document.getElementById('cf-code').textContent = folio;
+  window.scrollTo(0,0);
+}
+
+function generarFolio(){
+  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  return 'DC-2026-'+Array.from({length:6},()=>chars[Math.floor(Math.random()*chars.length)]).join('');
+}
+
+function volverObras(){
+  obraActual = null;
+  document.getElementById('filters-panel').classList.remove('hidden');
+  document.getElementById('obras-panel').classList.remove('hidden');
+  document.getElementById('form-panel').classList.add('hidden');
+  document.getElementById('confirm-panel').classList.add('hidden');
+  renderObras();
+}
+
+function enviar(){
+  document.getElementById('form-panel').classList.add('hidden');
+  document.getElementById('confirm-panel').classList.remove('hidden');
+}
+
+function copiar(btn){
+  const code = document.getElementById('cf-code').textContent;
+  navigator.clipboard && navigator.clipboard.writeText(code);
+  btn.textContent='¡Folio copiado ✓';
+  btn.style.background='#F0FDF4';
+  btn.style.color='#15803D';
+  btn.style.borderColor='#86EFAC';
+  setTimeout(()=>{
+    btn.textContent='Copiar folio';
+    btn.style.background='';btn.style.color='';btn.style.borderColor='';
+  },2200);
+}
+
+function nuevaDenuncia(){
+  obraActual = null;
+  document.getElementById('confirm-panel').classList.add('hidden');
+  document.getElementById('filters-panel').classList.remove('hidden');
+  document.getElementById('obras-panel').classList.remove('hidden');
+  renderObras();
+}
+
+// ── TABS ──────────────────────────────────────────────────────
+function showTab(t){
+  ['buscar','mapa','publicas'].forEach(id=>{
+    document.getElementById('screen-'+id).classList.toggle('hidden',id!==t);
+    document.getElementById('tab-'+id).classList.toggle('active',id===t);
+  });
+}
+
+// ── CHAT IA REAL ─────────────────────────────────────────────
+const SYSTEM_PROMPT = `Eres el asistente de búsqueda IA de la plataforma "Denuncia Ciudadana" de la Auditoría Superior de la Federación de México.
+
+Tu objetivo es ayudar al ciudadano a identificar la obra pública que quiere denunciar.
+
+El catálogo de obras disponibles es:
+${OBRAS.map(o=>`ID:${o.id} | "${o.nombre}" | tipo:${o.tipo} | estado:${o.estado} | contrato:${o.contrato} | monto:${o.monto} | avance:${o.avance}%`).join('\n')}
+
+INSTRUCCIÓN CRÍTICA DE FORMATO:
+Debes responder SIEMPRE con un objeto JSON válido con exactamente estas dos propiedades:
+{
+  "mensaje": "tu respuesta al ciudadano en español, breve y amigable (máximo 3 oraciones)",
+  "obras_ids": [array con los IDs numéricos de las obras relevantes, o [] si no aplica]
+}
+
+Reglas:
+1. Responde SIEMPRE en español dentro del campo "mensaje".
+2. Cuando el ciudadano mencione un estado, municipio, tipo de obra o nombre, incluye en "obras_ids" los IDs de todas las obras que coincidan.
+3. Si el ciudadano dice "todas", "muéstrame todo" o algo similar, incluye TODOS los IDs.
+4. Si no hay coincidencias, devuelve "obras_ids": [] y explícalo en el mensaje.
+5. NUNCA solicites datos personales.
+6. Sé empático y claro.
+7. NO incluyas texto fuera del JSON. Solo el objeto JSON.`;
+
+document.getElementById('ia-btn').addEventListener('click',function(){
+  const panel = document.getElementById('chat-panel');
+  panel.classList.toggle('hidden');
+  this.classList.toggle('open');
+  if(!chatListo && !panel.classList.contains('hidden')){
+    chatListo = true;
+    addBotMsg('Hola, soy tu asistente IA. Puedo ayudarte a localizar la obra que quieres denunciar. ¿En qué estado está y qué tipo de obra es?');
+    chatHistory = [];
+  }
+});
+
+function addBotMsg(txt){
+  const msgs = document.getElementById('chat-msgs');
+  const d = document.createElement('div');
+  d.className = 'msg-row';
+  d.innerHTML=`<div class="bot-av"><svg width="11" height="11" viewBox="0 0 24 24" fill="white"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-6 8-6s8 2 8 6"/></svg></div><div class="bot-bubble">${txt}</div>`;
+  msgs.appendChild(d);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function addUserMsg(txt){
+  const msgs = document.getElementById('chat-msgs');
+  const d = document.createElement('div');
+  d.className = 'msg-row user';
+  d.innerHTML=`<div class="user-bubble">${txt}</div>`;
+  msgs.appendChild(d);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function showTyping(){
+  const msgs = document.getElementById('chat-msgs');
+  const d = document.createElement('div');
+  d.id = 'typing';
+  d.className = 'msg-row';
+  d.innerHTML=`<div class="bot-av"><svg width="11" height="11" viewBox="0 0 24 24" fill="white"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-6 8-6s8 2 8 6"/></svg></div><div class="bot-bubble"><div class="typing-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>`;
+  msgs.appendChild(d);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function hideTyping(){
+  const t = document.getElementById('typing');
+  if(t) t.remove();
+}
+
+// ── FILTRO DESDE IA ──────────────────────────────────────────
+let iaFiltroActivo = false;
+let iaIdsFiltro = [];
+
+function filtrarPorIA(ids){
+  iaFiltroActivo = true;
+  iaIdsFiltro = ids;
+  renderObrasIA();
+  // Flash visual en el panel de resultados
+  const panel = document.getElementById('obras-panel');
+  panel.style.transition = 'opacity 0.2s';
+  panel.style.opacity = '0.3';
+  setTimeout(()=>{ panel.style.opacity = '1'; }, 200);
+}
+
+function renderObrasIA(){
+  const lista = iaFiltroActivo
+    ? OBRAS.filter(o => iaIdsFiltro.includes(o.id))
+    : getObrasFiltradas();
+  const hdr = document.getElementById('result-hdr');
+  const cnt = lista.length;
+  hdr.innerHTML = iaFiltroActivo
+    ? `<span style="color:#1B3A6B;font-weight:700;">🤖 IA encontró ${cnt} obra${cnt!==1?'s':''} relevante${cnt!==1?'s':''}</span> &nbsp;<span style="cursor:pointer;color:#718096;font-size:10px;" onclick="limpiarFiltroIA()">✕ Ver todas</span>`
+    : `${cnt} obra${cnt!==1?'s':''} encontrada${cnt!==1?'s':''}`;
+  document.getElementById('obras-list').innerHTML = lista.map(o=>`
+    <div class="obra-card${obraActual===o.id?' sel':''}" onclick="selectObra(${o.id})" style="animation:fadeUp 0.25s ease both;">
+      <div class="obra-title">${o.nombre}</div>
+      <span class="obra-tipo-tag">${o.tipo.charAt(0).toUpperCase()+o.tipo.slice(1)}</span>
+      <div class="obra-meta">Contrato: ${o.contrato} &nbsp;·&nbsp; ${o.monto}<br>${o.contratista}</div>
+      <div class="obra-status-row">
+        <div class="s-dot" style="background:${COLORES[o.estatus]};"></div>
+        <span class="s-txt">${o.txt}</span>
+      </div>
+    </div>`).join('');
+}
+
+function limpiarFiltroIA(){
+  iaFiltroActivo = false;
+  iaIdsFiltro = [];
+  renderObras();
+}
+
+async function sendChat(){
+  const inp = document.getElementById('chat-inp');
+  const txt = inp.value.trim();
+  if(!txt) return;
+  inp.value = '';
+  inp.disabled = true;
+  document.getElementById('send-btn').disabled = true;
+
+  addUserMsg(txt);
+  chatHistory.push({role:'user', content: txt});
+  showTyping();
+
+  try {
+    const res = await fetch('/.netlify/functions/claude-proxy',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-haiku-4-5-20251001',
+        max_tokens:300,
+        system: SYSTEM_PROMPT,
+        messages: chatHistory
+      })
+    });
+    const data = await res.json();
+    hideTyping();
+    const raw = data.content?.[0]?.text || '{}';
+    let reply = 'Lo siento, no pude procesar tu consulta.';
+    let obrasIds = null;
+    try {
+      const parsed = JSON.parse(raw.trim());
+      reply = parsed.mensaje || reply;
+      if(Array.isArray(parsed.obras_ids) && parsed.obras_ids.length > 0){
+        obrasIds = parsed.obras_ids;
+      }
+    } catch(e){
+      // si no es JSON válido, usar el texto directo
+      reply = raw;
+    }
+    chatHistory.push({role:'assistant', content: raw});
+    addBotMsg(reply);
+    if(obrasIds !== null){
+      filtrarPorIA(obrasIds);
+    }
+  } catch(e){
+    hideTyping();
+    addBotMsg('⚠️ Error de conexión. Si estás abriendo el archivo directo desde tu computadora (file://), el navegador bloquea las llamadas a la API por seguridad. Sube el archivo a Netlify Drop (netlify.com/drop) para que funcione correctamente.');
+  }
+
+  inp.disabled = false;
+  document.getElementById('send-btn').disabled = false;
+  inp.focus();
+}
+
+document.getElementById('send-btn').addEventListener('click', sendChat);
+document.getElementById('chat-inp').addEventListener('keydown', e=>{ if(e.key==='Enter') sendChat(); });
+
+// ── DENUNCIAS PÚBLICAS ────────────────────────────────────────
+const PUBLICAS = [
+  {folio:'DC-2026-3K7Q4A',obra:'Red de agua potable Naucalpan – Sector Poniente',tipo:'Obra inexistente',estado:'En investigación',estadoCfg:{bg:'#FEF3C7',tx:'#92400E'}},
+  {folio:'DC-2026-9M2R1B',obra:'Libramiento Norponiente Guadalajara, Tramo 2',tipo:'Materiales de baja calidad',estado:'Verificada',estadoCfg:{bg:'#EBF1FA',tx:'#1B3A6B'}},
+  {folio:'DC-2026-6P5T8C',obra:'Esc. Primaria Lázaro Cárdenas, San Juan del Río',tipo:'Sin avance',estado:'Cerrada',estadoCfg:{bg:'#F0FDF4',tx:'#15803D'}},
+  {folio:'DC-2026-2X8W5D',obra:'Puente peatonal Insurgentes Norte – CDMX',tipo:'Sobreprecio',estado:'Verificada',estadoCfg:{bg:'#EBF1FA',tx:'#1B3A6B'}},
+  {folio:'DC-2026-7H3N2E',obra:'Hospital General Zona Norte, Monterrey',tipo:'Incumplimiento de especificaciones',estado:'En investigación',estadoCfg:{bg:'#FEF3C7',tx:'#92400E'}},
+];
+
+document.getElementById('pub-list').innerHTML = PUBLICAS.map(p=>`
+  <div class="pub-card">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px;">
+      <span style="font-family:var(--mono);font-size:11px;color:var(--azul-med);font-weight:600;">${p.folio}</span>
+      <span class="estado-pill" style="background:${p.estadoCfg.bg};color:${p.estadoCfg.tx};">${p.estado}</span>
+    </div>
+    <div style="font-size:12px;font-weight:600;color:#1A202C;margin-bottom:3px;line-height:1.4;">${p.obra}</div>
+    <div style="font-size:11px;color:var(--gris-txt);">${p.tipo}</div>
+  </div>`).join('');
+
+// ── RELOJ ──────────────────────────────────────────────────────
+function tick(){
+  const n = new Date();
+  document.getElementById('clock').textContent =
+    n.getHours()+':'+(n.getMinutes()<10?'0':'')+n.getMinutes();
+}
+tick();
+setInterval(tick,30000);
+
+// ── INIT ──────────────────────────────────────────────────────
+renderObras();
+</script>
+</body>
+</html>
