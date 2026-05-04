@@ -24,7 +24,7 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;background:#0D2547;font-family:var(--font);}
 body{display:flex;justify-content:center;align-items:flex-start;padding:24px 0 48px;}
- 
+
 /* ── PHONE SHELL ── */
 .phone{
   width:390px;max-width:100%;
@@ -39,7 +39,7 @@ body{display:flex;justify-content:center;align-items:flex-start;padding:24px 0 4
   body{padding:0;background:var(--gris-bg);}
   .phone{border-radius:0;border:none;box-shadow:none;width:100%;}
 }
- 
+
 /* ── STATUS BAR ── */
 .status{
   background:var(--azul);
@@ -49,7 +49,7 @@ body{display:flex;justify-content:center;align-items:flex-start;padding:24px 0 4
 .status-time{color:#fff;font-size:13px;font-weight:600;font-family:var(--mono);}
 .status-icons{display:flex;align-items:center;gap:5px;}
 .status-icons span{color:rgba(255,255,255,0.8);font-size:11px;}
- 
+
 /* ── TOPBAR ── */
 .topbar{
   background:var(--azul);
@@ -77,7 +77,7 @@ body{display:flex;justify-content:center;align-items:flex-start;padding:24px 0 4
 .pulse{width:7px;height:7px;border-radius:50%;background:#22C55E;flex-shrink:0;
   animation:pulse 2s infinite;}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,0.4);}50%{box-shadow:0 0 0 4px rgba(34,197,94,0);}}
- 
+
 /* ── TABS ── */
 .tabs{
   background:var(--azul);
@@ -94,11 +94,11 @@ body{display:flex;justify-content:center;align-items:flex-start;padding:24px 0 4
   transition:color 0.15s;
 }
 .tab.active{color:#fff;border-bottom-color:#fff;font-weight:700;}
- 
+
 /* ── SCREEN ── */
 .screen{background:var(--gris-bg);min-height:580px;}
 .hidden{display:none!important;}
- 
+
 /* ── CHAT PANEL ── */
 .chat-panel{background:#fff;margin:10px 12px 0;border-radius:var(--radio);overflow:hidden;
   box-shadow:0 2px 12px rgba(0,0,0,0.08);}
@@ -154,7 +154,7 @@ body{display:flex;justify-content:center;align-items:flex-start;padding:24px 0 4
   cursor:pointer;flex-shrink:0;transition:transform 0.1s;
 }
 .chat-send-btn:active{transform:scale(0.92);}
- 
+
 /* ── FILTERS ── */
 .section-lbl{
   font-size:10px;font-weight:700;color:var(--gris-txt);
@@ -183,7 +183,7 @@ body{display:flex;justify-content:center;align-items:flex-start;padding:24px 0 4
   box-shadow:0 1px 4px rgba(0,0,0,0.05);}
 .stat-num{font-size:20px;font-weight:700;letter-spacing:-0.03em;}
 .stat-lbl{font-size:9px;color:var(--gris-txt);margin-top:2px;line-height:1.3;font-weight:500;}
- 
+
 /* ── OBRA CARDS ── */
 .result-hdr{padding:8px 16px;font-size:11px;color:var(--gris-txt);font-weight:500;}
 .obra-card{
@@ -203,7 +203,7 @@ body{display:flex;justify-content:center;align-items:flex-start;padding:24px 0 4
 .obra-status-row{display:flex;align-items:center;gap:5px;}
 .s-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
 .s-txt{font-size:10px;color:var(--gris-txt);}
- 
+
 /* ── FORM ── */
 .form-card{background:#fff;margin:0 12px 6px;border-radius:var(--radio);padding:15px;
   box-shadow:0 1px 4px rgba(0,0,0,0.05);}
@@ -255,7 +255,7 @@ body{display:flex;justify-content:center;align-items:flex-start;padding:24px 0 4
   font-size:12px;cursor:pointer;padding:8px 16px;
   display:block;font-family:var(--font);font-weight:600;
 }
- 
+
 /* ── CONFIRM ── */
 .confirm-wrap{padding:28px 20px;text-align:center;}
 .confirm-icon{
@@ -283,7 +283,7 @@ body{display:flex;justify-content:center;align-items:flex-start;padding:24px 0 4
   cursor:pointer;font-family:var(--font);transition:background 0.15s;
 }
 .nueva-btn:hover{background:var(--azul-med);}
- 
+
 /* ── MAPA ── */
 .mapa-wrap{padding:14px 12px;}
 .mapa-box{
@@ -293,7 +293,7 @@ body{display:flex;justify-content:center;align-items:flex-start;padding:24px 0 4
 .mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 .mini-card{background:#fff;border-radius:10px;padding:12px;text-align:center;
   box-shadow:0 1px 4px rgba(0,0,0,0.05);}
- 
+
 /* ── PÚBLICAS ── */
 .pub-wrap{padding:10px 12px;}
 .pub-card{background:#fff;border-radius:var(--radio);padding:13px;margin-bottom:8px;
@@ -306,7 +306,7 @@ body{display:flex;justify-content:center;align-items:flex-start;padding:24px 0 4
 </head>
 <body>
 <div class="phone">
- 
+
   <!-- STATUS -->
   <div class="status">
     <span class="status-time" id="clock">9:41</span>
@@ -316,7 +316,7 @@ body{display:flex;justify-content:center;align-items:flex-start;padding:24px 0 4
       <span>100%</span>
     </div>
   </div>
- 
+
   <!-- TOPBAR -->
   <div class="topbar">
     <div class="brand">
@@ -333,17 +333,17 @@ body{display:flex;justify-content:center;align-items:flex-start;padding:24px 0 4
       Asistente IA
     </button>
   </div>
- 
+
   <!-- TABS -->
   <div class="tabs">
     <div class="tab active" id="tab-buscar" onclick="showTab('buscar')">Buscar obra</div>
     <div class="tab" id="tab-mapa" onclick="showTab('mapa')">Mapa</div>
     <div class="tab" id="tab-publicas" onclick="showTab('publicas')">Denuncias públicas</div>
   </div>
- 
+
   <!-- SCREEN BUSCAR -->
   <div class="screen" id="screen-buscar">
- 
+
     <!-- CHAT IA -->
     <div id="chat-panel" class="hidden">
       <div class="chat-panel">
@@ -363,7 +363,7 @@ body{display:flex;justify-content:center;align-items:flex-start;padding:24px 0 4
         </div>
       </div>
     </div>
- 
+
     <!-- FILTERS -->
     <div id="filters-panel">
       <div class="section-lbl">Filtros de búsqueda</div>
@@ -412,13 +412,13 @@ body{display:flex;justify-content:center;align-items:flex-start;padding:24px 0 4
         </div>
       </div>
     </div>
- 
+
     <!-- OBRAS -->
     <div id="obras-panel">
       <div class="result-hdr" id="result-hdr"></div>
       <div id="obras-list"></div>
     </div>
- 
+
     <!-- FORMULARIO -->
     <div id="form-panel" class="hidden">
       <div class="form-card">
@@ -461,7 +461,7 @@ body{display:flex;justify-content:center;align-items:flex-start;padding:24px 0 4
       </div>
       <button class="back-btn" onclick="volverObras()">← Volver a resultados</button>
     </div>
- 
+
     <!-- CONFIRMACIÓN -->
     <div id="confirm-panel" class="hidden">
       <div class="confirm-wrap">
@@ -479,9 +479,9 @@ body{display:flex;justify-content:center;align-items:flex-start;padding:24px 0 4
         <button class="nueva-btn" onclick="nuevaDenuncia()">Hacer otra denuncia</button>
       </div>
     </div>
- 
+
   </div><!-- /screen-buscar -->
- 
+
   <!-- SCREEN MAPA -->
   <div class="screen hidden" id="screen-mapa">
     <div class="mapa-wrap">
@@ -510,7 +510,7 @@ body{display:flex;justify-content:center;align-items:flex-start;padding:24px 0 4
       </div>
     </div>
   </div>
- 
+
   <!-- SCREEN PÚBLICAS -->
   <div class="screen hidden" id="screen-publicas">
     <div class="pub-wrap">
@@ -518,9 +518,9 @@ body{display:flex;justify-content:center;align-items:flex-start;padding:24px 0 4
       <div id="pub-list"></div>
     </div>
   </div>
- 
+
 </div><!-- /phone -->
- 
+
 <script>
 // ── DATOS DE OBRAS ──────────────────────────────────────────────
 const OBRAS = [
@@ -533,13 +533,13 @@ const OBRAS = [
   {id:7,nombre:"Boulevard Universitario Puebla – Colonia La Paz",tipo:"carretera",estado:"pue",muni:"pue",contrato:"MOP-2024-0567",monto:"$28.9 MDP",avance:92,estatus:"activa",txt:"92% avance · Sin denuncias",contratista:"Pavimentos y Vialidades de Puebla S.A."},
   {id:8,nombre:"Puente peatonal Insurgentes Norte – Metro Indios Verdes",tipo:"puente",estado:"cdmx",muni:"nau",contrato:"SEMOVI-2023-1198",monto:"$19.2 MDP",avance:60,estatus:"alerta",txt:"60% avance · 1 denuncia previa",contratista:"Estructuras Metropolitanas S.A."},
 ];
- 
+
 const COLORES = {activa:"#22C55E",alerta:"#F59E0B",cancelada:"#EF4444"};
 let obraActual = null;
 let tipoActivo = 'todos';
 let chatHistory = [];
 let chatListo = false;
- 
+
 // ── RENDER OBRAS ──────────────────────────────────────────────
 function getObrasFiltradas(){
   const est = document.getElementById('sel-estado').value;
@@ -550,7 +550,7 @@ function getObrasFiltradas(){
     (tipoActivo === 'todos' || o.tipo === tipoActivo)
   );
 }
- 
+
 function renderObras(){
   const lista = getObrasFiltradas();
   const hdr = document.getElementById('result-hdr');
@@ -569,9 +569,9 @@ function renderObras(){
       </div>
     </div>`).join('');
 }
- 
+
 function filterObras(){ iaFiltroActivo=false; iaIdsFiltro=[]; renderObras(); }
- 
+
 function selectTipo(el, tipo){
   document.querySelectorAll('.ttag').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
@@ -579,7 +579,7 @@ function selectTipo(el, tipo){
   iaFiltroActivo=false; iaIdsFiltro=[];
   renderObras();
 }
- 
+
 function selectObra(id){
   obraActual = id;
   const o = OBRAS.find(x=>x.id===id);
@@ -594,12 +594,12 @@ function selectObra(id){
   document.getElementById('cf-code').textContent = folio;
   window.scrollTo(0,0);
 }
- 
+
 function generarFolio(){
   const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   return 'DC-2026-'+Array.from({length:6},()=>chars[Math.floor(Math.random()*chars.length)]).join('');
 }
- 
+
 function volverObras(){
   obraActual = null;
   document.getElementById('filters-panel').classList.remove('hidden');
@@ -608,12 +608,12 @@ function volverObras(){
   document.getElementById('confirm-panel').classList.add('hidden');
   renderObras();
 }
- 
+
 function enviar(){
   document.getElementById('form-panel').classList.add('hidden');
   document.getElementById('confirm-panel').classList.remove('hidden');
 }
- 
+
 function copiar(btn){
   const code = document.getElementById('cf-code').textContent;
   navigator.clipboard && navigator.clipboard.writeText(code);
@@ -626,7 +626,7 @@ function copiar(btn){
     btn.style.background='';btn.style.color='';btn.style.borderColor='';
   },2200);
 }
- 
+
 function nuevaDenuncia(){
   obraActual = null;
   document.getElementById('confirm-panel').classList.add('hidden');
@@ -634,7 +634,7 @@ function nuevaDenuncia(){
   document.getElementById('obras-panel').classList.remove('hidden');
   renderObras();
 }
- 
+
 // ── TABS ──────────────────────────────────────────────────────
 function showTab(t){
   ['buscar','mapa','publicas'].forEach(id=>{
@@ -642,22 +642,22 @@ function showTab(t){
     document.getElementById('tab-'+id).classList.toggle('active',id===t);
   });
 }
- 
+
 // ── CHAT IA REAL ─────────────────────────────────────────────
 const SYSTEM_PROMPT = `Eres el asistente de búsqueda IA de la plataforma "Denuncia Ciudadana" de la Auditoría Superior de la Federación de México.
- 
+
 Tu objetivo es ayudar al ciudadano a identificar la obra pública que quiere denunciar.
- 
+
 El catálogo de obras disponibles es:
 ${OBRAS.map(o=>`ID:${o.id} | "${o.nombre}" | tipo:${o.tipo} | estado:${o.estado} | contrato:${o.contrato} | monto:${o.monto} | avance:${o.avance}%`).join('\n')}
- 
+
 INSTRUCCIÓN CRÍTICA DE FORMATO:
 Debes responder SIEMPRE con un objeto JSON válido con exactamente estas dos propiedades:
 {
   "mensaje": "tu respuesta al ciudadano en español, breve y amigable (máximo 3 oraciones)",
   "obras_ids": [array con los IDs numéricos de las obras relevantes, o [] si no aplica]
 }
- 
+
 Reglas:
 1. Responde SIEMPRE en español dentro del campo "mensaje".
 2. Cuando el ciudadano mencione un estado, municipio, tipo de obra o nombre, incluye en "obras_ids" los IDs de todas las obras que coincidan.
@@ -666,7 +666,7 @@ Reglas:
 5. NUNCA solicites datos personales.
 6. Sé empático y claro.
 7. NO incluyas texto fuera del JSON. Solo el objeto JSON.`;
- 
+
 document.getElementById('ia-btn').addEventListener('click',function(){
   const panel = document.getElementById('chat-panel');
   panel.classList.toggle('hidden');
@@ -677,7 +677,7 @@ document.getElementById('ia-btn').addEventListener('click',function(){
     chatHistory = [];
   }
 });
- 
+
 function addBotMsg(txt){
   const msgs = document.getElementById('chat-msgs');
   const d = document.createElement('div');
@@ -686,7 +686,7 @@ function addBotMsg(txt){
   msgs.appendChild(d);
   msgs.scrollTop = msgs.scrollHeight;
 }
- 
+
 function addUserMsg(txt){
   const msgs = document.getElementById('chat-msgs');
   const d = document.createElement('div');
@@ -695,7 +695,7 @@ function addUserMsg(txt){
   msgs.appendChild(d);
   msgs.scrollTop = msgs.scrollHeight;
 }
- 
+
 function showTyping(){
   const msgs = document.getElementById('chat-msgs');
   const d = document.createElement('div');
@@ -705,16 +705,16 @@ function showTyping(){
   msgs.appendChild(d);
   msgs.scrollTop = msgs.scrollHeight;
 }
- 
+
 function hideTyping(){
   const t = document.getElementById('typing');
   if(t) t.remove();
 }
- 
+
 // ── FILTRO DESDE IA ──────────────────────────────────────────
 let iaFiltroActivo = false;
 let iaIdsFiltro = [];
- 
+
 function filtrarPorIA(ids){
   iaFiltroActivo = true;
   iaIdsFiltro = ids;
@@ -725,7 +725,7 @@ function filtrarPorIA(ids){
   panel.style.opacity = '0.3';
   setTimeout(()=>{ panel.style.opacity = '1'; }, 200);
 }
- 
+
 function renderObrasIA(){
   const lista = iaFiltroActivo
     ? OBRAS.filter(o => iaIdsFiltro.includes(o.id))
@@ -746,13 +746,13 @@ function renderObrasIA(){
       </div>
     </div>`).join('');
 }
- 
+
 function limpiarFiltroIA(){
   iaFiltroActivo = false;
   iaIdsFiltro = [];
   renderObras();
 }
- 
+
 async function sendChat(){
   const inp = document.getElementById('chat-inp');
   const txt = inp.value.trim();
@@ -760,13 +760,13 @@ async function sendChat(){
   inp.value = '';
   inp.disabled = true;
   document.getElementById('send-btn').disabled = true;
- 
+
   addUserMsg(txt);
   chatHistory.push({role:'user', content: txt});
   showTyping();
- 
+
   try {
-    const res = await fetch('/.netlify/functions/claude-proxy',{
+    const res = await fetch('/api/claude-proxy',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body: JSON.stringify({
@@ -779,14 +779,14 @@ async function sendChat(){
     const data = await res.json();
     hideTyping();
     const raw = data.content?.[0]?.text || '{}';
- 
+
     // Limpiar markdown fences que el modelo a veces agrega (```json ... ```)
     const clean = raw.trim()
       .replace(/^```json\s*/i, '')
       .replace(/^```\s*/i, '')
       .replace(/\s*```$/i, '')
       .trim();
- 
+
     let reply = 'Lo siento, no pude procesar tu consulta.';
     let obrasIds = null;
     try {
@@ -820,15 +820,15 @@ async function sendChat(){
     hideTyping();
     addBotMsg('⚠️ Error de conexión. Si estás abriendo el archivo directo desde tu computadora (file://), el navegador bloquea las llamadas a la API por seguridad. Sube el archivo a Netlify Drop (netlify.com/drop) para que funcione correctamente.');
   }
- 
+
   inp.disabled = false;
   document.getElementById('send-btn').disabled = false;
   inp.focus();
 }
- 
+
 document.getElementById('send-btn').addEventListener('click', sendChat);
 document.getElementById('chat-inp').addEventListener('keydown', e=>{ if(e.key==='Enter') sendChat(); });
- 
+
 // ── DENUNCIAS PÚBLICAS ────────────────────────────────────────
 const PUBLICAS = [
   {folio:'DC-2026-3K7Q4A',obra:'Red de agua potable Naucalpan – Sector Poniente',tipo:'Obra inexistente',estado:'En investigación',estadoCfg:{bg:'#FEF3C7',tx:'#92400E'}},
@@ -837,7 +837,7 @@ const PUBLICAS = [
   {folio:'DC-2026-2X8W5D',obra:'Puente peatonal Insurgentes Norte – CDMX',tipo:'Sobreprecio',estado:'Verificada',estadoCfg:{bg:'#EBF1FA',tx:'#1B3A6B'}},
   {folio:'DC-2026-7H3N2E',obra:'Hospital General Zona Norte, Monterrey',tipo:'Incumplimiento de especificaciones',estado:'En investigación',estadoCfg:{bg:'#FEF3C7',tx:'#92400E'}},
 ];
- 
+
 document.getElementById('pub-list').innerHTML = PUBLICAS.map(p=>`
   <div class="pub-card">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px;">
@@ -847,7 +847,7 @@ document.getElementById('pub-list').innerHTML = PUBLICAS.map(p=>`
     <div style="font-size:12px;font-weight:600;color:#1A202C;margin-bottom:3px;line-height:1.4;">${p.obra}</div>
     <div style="font-size:11px;color:var(--gris-txt);">${p.tipo}</div>
   </div>`).join('');
- 
+
 // ── RELOJ ──────────────────────────────────────────────────────
 function tick(){
   const n = new Date();
@@ -856,7 +856,7 @@ function tick(){
 }
 tick();
 setInterval(tick,30000);
- 
+
 // ── INIT ──────────────────────────────────────────────────────
 renderObras();
 </script>
